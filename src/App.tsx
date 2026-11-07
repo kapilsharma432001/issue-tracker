@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 type IssueStatus = "open" | "resolved";
 
 interface Issue{
@@ -25,6 +27,15 @@ function IssueCard({ issue }: IssueCardProps){
   );
 }
 
+function IncreaseCounter(){
+  const [count, setCount] = useState<number>(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  )
+}
 
 function App(){
   return (
@@ -33,6 +44,7 @@ function App(){
       {issues.map(issue => (
         <IssueCard key = {issue.id} issue={issue}/>
       ))}
+      <IncreaseCounter/>
     </main>
   )
 }
