@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 type IssueStatus = "open" | "resolved";
+type IssueFilter = "all" | IssueStatus;
 
 interface Issue {
   id: number;
@@ -46,6 +47,13 @@ function IncreaseCounter() {
 
 function App() {
   const [issues, setIssues] = useState<Issue[]>(initialIssues);
+  const [filter, setFilter] = useState<IssueFilter>("all");
+
+  // if issue = 'all' then include every issue
+  // else include only the issuee whose status matches the selected filter
+  const filteredIssues = issues.filter(issue => 
+    filter === "all" || issue.status === filter
+  )
 
   function resolveIssue(id: number): void {
     setIssues((prev) =>
@@ -57,8 +65,16 @@ function App() {
   return (
     <main>
       <h1>Issue Tracker</h1>
-      {issues.map((issue) => (
-        <IssueCard key={issue.id} issue={issue} onResolve={resolveIssue} />
+      <div>
+        <button onClick={() => setFilter("all")}>All</button>
+        <button onClick={() => setFilter("open")}>Open</button>
+        <button onClick={() => setFilter("resolved")}>Resolved</button>
+      </div>
+      {filteredIssues.map((issue) => (
+        <IssueCard 
+        key={issue.id} 
+        issue={issue}
+         onResolve={resolveIssue} />
       ))}
       <IncreaseCounter />
     </main>
