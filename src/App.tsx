@@ -25,12 +25,11 @@ function IssueCard({ issue, onResolve }: IssueCardProps) {
       <h3>{issue.title} </h3>
       <p> Status: {issue.status} </p>
 
-      <button
-        onClick={() => onResolve(issue.id)}
-        disabled={issue.status === "resolved"}
-      >
-        Resolve
-      </button>
+      {issue.status === "open" ? (
+        <button onClick={() => onResolve(issue.id)}>Resolve</button>
+      ): (
+        <span>Resolved ✅</span>
+      )}
     </div>
   );
 }
