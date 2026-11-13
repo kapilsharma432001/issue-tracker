@@ -35,15 +35,15 @@ function IssueCard({ issue, onResolve }: IssueCardProps) {
   );
 }
 
-function IncreaseCounter() {
-  const [count, setCount] = useState<number>(0);
+// function IncreaseCounter() {
+//   const [count, setCount] = useState<number>(0);
 
-  return (
-    <button onClick={() => setCount((count) => count + 1)}>
-      Count: {count}
-    </button>
-  );
-}
+//   return (
+//     <button onClick={() => setCount((count) => count + 1)}>
+//       Count: {count}
+//     </button>
+//   );
+// }
 
 function App() {
   const [issues, setIssues] = useState<Issue[]>(initialIssues);
@@ -76,7 +76,7 @@ function App() {
         issue={issue}
          onResolve={resolveIssue} />
       ))}
-      <IncreaseCounter />
+      {/* <IncreaseCounter /> */}
     </main>
   );
 }
