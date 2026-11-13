@@ -48,6 +48,7 @@ function IssueCard({ issue, onResolve }: IssueCardProps) {
 function App() {
   const [issues, setIssues] = useState<Issue[]>(initialIssues);
   const [filter, setFilter] = useState<IssueFilter>("all");
+  const [newTitle, setNewTitle] = useState<string>("");
 
   // if issue = 'all' then include every issue
   // else include only the issuee whose status matches the selected filter
@@ -77,6 +78,17 @@ function App() {
          onResolve={resolveIssue} />
       ))}
       {/* <IncreaseCounter /> */}
+       <div>
+        <label htmlFor="issue-title">Issue title: </label>
+        <input 
+            id = "issue-title"
+            type="text"
+            value={newTitle}
+            onChange={event => setNewTitle(event.target.value)}
+            placeholder="Enter new title"
+        />
+      </div>
+      <p>You enetered: {newTitle}</p>
     </main>
   );
 }
