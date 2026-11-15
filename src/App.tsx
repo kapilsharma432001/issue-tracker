@@ -78,7 +78,7 @@ function App() {
 
       const newIssue: Issue = {
         id: nextId,
-        title: newTitle,
+        title: title,
         status: "open"
       };
 
