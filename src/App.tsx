@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 
 type IssueStatus = "open" | "resolved";
 type IssueFilter = "all" | IssueStatus;
@@ -63,6 +63,29 @@ function App() {
       ),
     );
   }
+
+  function handleAddIssue(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault()
+
+    const title = newTitle.trim();
+
+    if (!title){
+      return
+    }
+
+    setIssues(prev => {
+      const nextId = Math.max(0, ...prev.map(issue => issue.id)) + 1
+
+      const newIssue: Issue = {
+        id: nextId,
+        title: newTitle,
+        status: "open"
+      };
+
+      return [...prev, newIssue];
+    })
+  }
+
   return (
     <main>
       <h1>Issue Tracker</h1>
@@ -71,6 +94,9 @@ function App() {
         <button onClick={() => setFilter("open")}>Open</button>
         <button onClick={() => setFilter("resolved")}>Resolved</button>
       </div>
+      {filteredIssues.length === 0 && (
+        <p>No issues found.</p>
+      )}
       {filteredIssues.map((issue) => (
         <IssueCard 
         key={issue.id} 
@@ -78,17 +104,18 @@ function App() {
          onResolve={resolveIssue} />
       ))}
       {/* <IncreaseCounter /> */}
-       <div>
-        <label htmlFor="issue-title">Issue title: </label>
-        <input 
-            id = "issue-title"
-            type="text"
-            value={newTitle}
-            onChange={event => setNewTitle(event.target.value)}
-            placeholder="Enter new title"
+       <form onSubmit={handleAddIssue}>
+        <label htmlFor="issue-title">Issue Title: </label>
+        <input
+          id="issue-title"
+          type="text"
+          value={newTitle}
+          onChange={event => setNewTitle(event.target.value)}
+          placeholder="Enter issue title"
+          required
         />
-      </div>
-      <p>You enetered: {newTitle}</p>
+        <button type="submit">Add Issue</button>
+       </form>
     </main>
   );
 }
