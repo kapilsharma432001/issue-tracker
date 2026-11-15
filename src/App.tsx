@@ -90,6 +90,8 @@ function App() {
 
       return [...prev, newIssue];
     })
+    setNewTitle("");
+    setFilter("all");
   }
 
   return (
