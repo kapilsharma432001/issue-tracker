@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 
 type IssueStatus = "open" | "resolved";
 type IssueFilter = "all" | IssueStatus;
@@ -35,6 +35,7 @@ function IssueCard({ issue, onResolve }: IssueCardProps) {
   );
 }
 
+
 // function IncreaseCounter() {
 //   const [count, setCount] = useState<number>(0);
 
@@ -49,6 +50,11 @@ function App() {
   const [issues, setIssues] = useState<Issue[]>(initialIssues);
   const [filter, setFilter] = useState<IssueFilter>("all");
   const [newTitle, setNewTitle] = useState<string>("");
+
+  const openCount = issues.filter(issue => issue.status === "open").length;
+  useEffect(() => {
+    document.title = `Issue tracker (${openCount} open)`;
+  }, [openCount]);
 
   // if issue = 'all' then include every issue
   // else include only the issuee whose status matches the selected filter
