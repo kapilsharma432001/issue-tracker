@@ -9,11 +9,11 @@ interface Issue {
   status: IssueStatus;
 }
 
-const initialIssues: Issue[] = [
-  { id: 1, title: "Login bug", status: "open" },
-  { id: 2, title: "Dashboard error", status: "resolved" },
-  { id: 3, title: "API timeout", status: "open" },
-];
+// const initialIssues: Issue[] = [
+//   { id: 1, title: "Login bug", status: "open" },
+//   { id: 2, title: "Dashboard error", status: "resolved" },
+//   { id: 3, title: "API timeout", status: "open" },
+// ];
 
 interface IssueCardProps {
   issue: Issue;
@@ -47,9 +47,43 @@ function IssueCard({ issue, onResolve }: IssueCardProps) {
 // }
 
 function App() {
-  const [issues, setIssues] = useState<Issue[]>(initialIssues);
+  const [issues, setIssues] = useState<Issue[]>([]);
   const [filter, setFilter] = useState<IssueFilter>("all");
   const [newTitle, setNewTitle] = useState<string>("");
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadIssues() {
+      try {
+        const response = await fetch("/issues.json")
+
+        if (!response.ok){
+          throw new Error("Failed to fetch issues");
+        }
+        const data: Issue[] = await response.json();
+        if (!ignore) setIssues(data);
+      } catch(error){
+
+        if(!ignore){
+          setError(error instanceof Error ? error.message : "Unknown error");
+        }
+      }finally{
+        if (!ignore) setLoading(false);
+      }
+    }
+
+    loadIssues();
+
+    // React's cleanup function, runs when component unmounts or effect needs to run again
+    return () => {
+      ignore = true;
+    }
+  }, []);
+
 
   const openCount = issues.filter(issue => issue.status === "open").length;
   useEffect(() => {
@@ -102,10 +136,16 @@ function App() {
         <button onClick={() => setFilter("open")}>Open</button>
         <button onClick={() => setFilter("resolved")}>Resolved</button>
       </div>
-      {filteredIssues.length === 0 && (
+      {/* {filteredIssues.length === 0 && (
+        <p>No issues found.</p>
+      )} */}
+      { loading && <p>Loading issues...</p> }
+      { error && <p>Error: {error} </p>}
+      {!loading && !error && filteredIssues.length === 0 && (
         <p>No issues found.</p>
       )}
-      {filteredIssues.map((issue) => (
+
+      {!loading && !error && filteredIssues.map((issue) => (
         <IssueCard 
         key={issue.id} 
         issue={issue}
