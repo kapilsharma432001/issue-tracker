@@ -59,7 +59,7 @@ function App() {
 
     async function loadIssues() {
       try {
-        const response = await fetch("/issues.json")
+        const response = await fetch("http://localhost:8000/issues")
 
         if (!response.ok){
           throw new Error("Failed to fetch issues");
