@@ -54,6 +54,9 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [saving, setSaving] = useState(false);
+  const [addError, setAddError] = useState("");
+
   useEffect(() => {
     let ignore = false;
 
@@ -104,30 +107,39 @@ function App() {
     );
   }
 
-  function handleAddIssue(event: FormEvent<HTMLFormElement>): void {
+  async function handleAddIssue(event: FormEvent<HTMLFormElement>): Promise <void> {
     event.preventDefault()
 
     const title = newTitle.trim();
+    if (!title || saving) return;
 
-    if (!title){
-      return
+    setSaving(true);
+    setAddError("");
+
+
+  try {
+    const response = await fetch("http://localhost:8000/issues", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({title})
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create issue");
     }
 
-    setIssues(prev => {
-      const nextId = Math.max(0, ...prev.map(issue => issue.id)) + 1
+    const newIssue: Issue = await response.json();
 
-      const newIssue: Issue = {
-        id: nextId,
-        title: title,
-        status: "open"
-      };
-
-      return [...prev, newIssue];
-    })
+    setIssues(prev => [...prev, newIssue]);
     setNewTitle("");
     setFilter("all");
-  }
 
+  } catch {
+    setAddError("Cound not create issue, please try again !!");
+  }finally {
+    setSaving(false);
+  }
+  }
   return (
     <main>
       <h1>Issue Tracker</h1>
@@ -161,8 +173,13 @@ function App() {
           onChange={event => setNewTitle(event.target.value)}
           placeholder="Enter issue title"
           required
+          disabled={saving}
         />
-        <button type="submit">Add Issue</button>
+        <button type="submit" disabled={saving}>
+          { saving ? "Adding..." : "Add Issue" }
+          </button>
+        
+        {addError && <p role = "alert">{addError}</p>}
        </form>
     </main>
   );
