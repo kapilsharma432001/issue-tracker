@@ -28,7 +28,7 @@ function IssueCard({ issue, onResolve, resolvingId }: IssueCardProps) {
       <p> Status: {issue.status} </p>
 
       {issue.status === "open" ? (
-        <button onClick={() => onResolve(issue.id)} disabled={resolvingId === issue.id}>
+        <button onClick={() => onResolve(issue.id)} disabled={resolvingId !== null}>
           {resolvingId === issue.id ? "Resolving..." : "Resolve" }
           </button>
       ) : (
@@ -159,7 +159,7 @@ function App() {
       setNewTitle("");
       setFilter("all");
     } catch {
-      setAddError("Cound not create issue, please try again !!");
+      setAddError("Could not create issue, please try again !!");
     } finally {
       setSaving(false);
     }
