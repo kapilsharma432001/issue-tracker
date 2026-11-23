@@ -1,13 +1,6 @@
 import { useState, useEffect, type FormEvent } from "react";
-
-type IssueStatus = "open" | "resolved";
-type IssueFilter = "all" | IssueStatus;
-
-interface Issue {
-  id: number;
-  title: string;
-  status: IssueStatus;
-}
+import type { Issue, IssueFilter } from "./types/issue";
+import IssueCard from "./components/IssueCard";
 
 // const initialIssues: Issue[] = [
 //   { id: 1, title: "Login bug", status: "open" },
@@ -15,28 +8,6 @@ interface Issue {
 //   { id: 3, title: "API timeout", status: "open" },
 // ];
 
-interface IssueCardProps {
-  issue: Issue;
-  onResolve: (id: number) => void;
-  resolvingId: number | null;
-}
-
-function IssueCard({ issue, onResolve, resolvingId }: IssueCardProps) {
-  return (
-    <div>
-      <h3>{issue.title} </h3>
-      <p> Status: {issue.status} </p>
-
-      {issue.status === "open" ? (
-        <button onClick={() => onResolve(issue.id)} disabled={resolvingId === issue.id}>
-          {resolvingId === issue.id ? "Resolving..." : "Resolve" }
-          </button>
-      ) : (
-        <span>Resolved ✅</span>
-      )}
-    </div>
-  );
-}
 
 // function IncreaseCounter() {
 //   const [count, setCount] = useState<number>(0);
@@ -159,7 +130,7 @@ function App() {
       setNewTitle("");
       setFilter("all");
     } catch {
-      setAddError("Cound not create issue, please try again !!");
+      setAddError("Could not create issue, please try again !!");
     } finally {
       setSaving(false);
     }

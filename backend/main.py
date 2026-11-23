@@ -57,9 +57,9 @@ def create_issue(payload: IssueCreate):
 
 @app.patch("/issues/{issue_id}", response_model=Issue)
 def update_issue(issue_id: int, payload: IssueUpdate):
-    print("Recieved payload: ", payload)
-    print("Received issue id: ", issue_id)
-    print("===========")
+    # print("Recieved payload: ", payload)
+    # print("Received issue id: ", issue_id)
+    # print("===========")
     for issue in issues:
         if issue.id == issue_id:
             issue.status = payload.status
