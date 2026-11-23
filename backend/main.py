@@ -22,6 +22,9 @@ class Issue(BaseModel):
 class IssueCreate(BaseModel):
     title: str
 
+class IssueUpdate(BaseModel):
+    status: Literal["open", "resolved"]
+
 issues = [
     Issue(id=1, title="Login bug", status="open"),
     Issue(id=2, title="Dashboard Error", status="resolved"),
@@ -50,3 +53,17 @@ def create_issue(payload: IssueCreate):
 
     issues.append(new_issue)
     return new_issue
+
+
+@app.patch("/issues/{issue_id}", response_model=Issue)
+def update_issue(issue_id: int, payload: IssueUpdate):
+    print("Recieved payload: ", payload)
+    print("Received issue id: ", issue_id)
+    print("===========")
+    for issue in issues:
+        if issue.id == issue_id:
+            issue.status = payload.status
+            return issue
+
+    raise HTTPException(status_code=404, detail="Issue not found")
+
