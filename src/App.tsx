@@ -1,6 +1,8 @@
 import { useState, useEffect, type FormEvent } from "react";
-import type { Issue, IssueFilter } from "./types/issue";
+import type { Issue, IssueFilter as FilterType} from "./types/issue";
 import IssueCard from "./components/IssueCard";
+import IssueFilter from "./components/IssueFilter";
+import IssueForm from "./components/IssueForm";
 
 // const initialIssues: Issue[] = [
 //   { id: 1, title: "Login bug", status: "open" },
@@ -21,7 +23,7 @@ import IssueCard from "./components/IssueCard";
 
 function App() {
   const [issues, setIssues] = useState<Issue[]>([]);
-  const [filter, setFilter] = useState<IssueFilter>("all");
+  const [filter, setFilter] = useState<FilterType>("all");
   const [newTitle, setNewTitle] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -139,9 +141,7 @@ function App() {
     <main>
       <h1>Issue Tracker</h1>
       <div>
-        <button onClick={() => setFilter("all")}>All</button>
-        <button onClick={() => setFilter("open")}>Open</button>
-        <button onClick={() => setFilter("resolved")}>Resolved</button>
+        <IssueFilter filter = {filter} onFilterChange={setFilter}/>
       </div>
       {/* {filteredIssues.length === 0 && (
         <p>No issues found.</p>
@@ -161,23 +161,13 @@ function App() {
       {resolveError && <p role="alert">{resolveError}</p>}
 
       {/* <IncreaseCounter /> */}
-      <form onSubmit={handleAddIssue}>
-        <label htmlFor="issue-title">Issue Title: </label>
-        <input
-          id="issue-title"
-          type="text"
-          value={newTitle}
-          onChange={(event) => setNewTitle(event.target.value)}
-          placeholder="Enter issue title"
-          required
-          disabled={saving}
-        />
-        <button type="submit" disabled={saving}>
-          {saving ? "Adding..." : "Add Issue"}
-        </button>
-
-        {addError && <p role="alert">{addError}</p>}
-      </form>
+      <IssueForm
+        title={newTitle}
+        onTitleChange={setNewTitle}
+        onSubmit={handleAddIssue}
+        saving={saving}
+        error={addError}
+      />
     </main>
   );
 }

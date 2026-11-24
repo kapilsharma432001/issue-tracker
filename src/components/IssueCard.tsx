@@ -14,11 +14,11 @@ function IssueCard({issue, onResolve, resolvingId}: IssueCardProps) {
 
             {issue.status === "open" ? 
             (
-                <button onClick={() => onResolve(issue.id)} disabled = {resolvingId === issue.id}>
+                <button onClick={() => onResolve(issue.id)} disabled = {resolvingId !== null}>
                     {resolvingId === issue.id ? "Resolving..." : "Resolve"}
                 </button>
                 ): 
-                (<span>Reoslved ✅</span>)}
+                (<span>Resolved ✅</span>)}
         </div>
     )
 }
