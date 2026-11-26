@@ -5,12 +5,12 @@ interface IssueFilterProps{
     onFilterChange: (filter: FilterType) => void;
 }
 
-function IssueFilter({onFilterChange}: IssueFilterProps ){
+function IssueFilter({filter, onFilterChange}: IssueFilterProps ){
     return (
         <div>
-            <button onClick={() => onFilterChange("all")}>All</button>
-            <button onClick={() => onFilterChange("open")}>Open</button>
-            <button onClick={() => onFilterChange("resolved")}>Resolved</button>
+            <button aria-pressed={filter === "all"} onClick={() => onFilterChange("all")}>All</button>
+            <button aria-pressed={filter === "open"} onClick={() => onFilterChange("open")}>Open</button>
+            <button aria-pressed={filter === "resolved"} onClick={() => onFilterChange("resolved")}>Resolved</button>
         </div>
     );
 }
