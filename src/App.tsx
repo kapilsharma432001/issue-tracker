@@ -3,6 +3,7 @@ import type { Issue, IssueFilter as FilterType} from "./types/issue";
 import IssueCard from "./components/IssueCard";
 import IssueFilter from "./components/IssueFilter";
 import IssueForm from "./components/IssueForm";
+import { getIssues, createIssue, resolveIssueById } from "./api/issues";
 
 // const initialIssues: Issue[] = [
 //   { id: 1, title: "Login bug", status: "open" },
@@ -40,12 +41,7 @@ function App() {
 
     async function loadIssues() {
       try {
-        const response = await fetch("http://localhost:8000/issues");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch issues");
-        }
-        const data: Issue[] = await response.json();
+        const data = await getIssues();
         if (!ignore) setIssues(data);
       } catch (error) {
         if (!ignore) {
@@ -82,17 +78,7 @@ function App() {
     setResolveError("");
 
     try {
-      const response = await fetch(`http://localhost:8000/issues/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "resolved" }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to resolve issue");
-      }
-
-      const updatedIssue: Issue = await response.json();
+      const updatedIssue = await resolveIssueById(id);
 
       setIssues((prev) =>
         prev.map((issue) => (issue.id === id ? updatedIssue : issue)),
@@ -116,19 +102,9 @@ function App() {
     setAddError("");
 
     try {
-      const response = await fetch("http://localhost:8000/issues", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
-      });
+      const newIssue = await createIssue(title);
 
-      if (!response.ok) {
-        throw new Error("Failed to create issue");
-      }
-
-      const newIssue: Issue = await response.json();
-
-      setIssues((prev) => [...prev, newIssue]);
+      setIssues(prev => [...prev, newIssue]);
       setNewTitle("");
       setFilter("all");
     } catch {
