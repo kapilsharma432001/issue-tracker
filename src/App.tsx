@@ -5,22 +5,6 @@ import IssueFilter from "./components/IssueFilter";
 import IssueForm from "./components/IssueForm";
 import { getIssues, createIssue, resolveIssueById } from "./api/issues";
 
-// const initialIssues: Issue[] = [
-//   { id: 1, title: "Login bug", status: "open" },
-//   { id: 2, title: "Dashboard error", status: "resolved" },
-//   { id: 3, title: "API timeout", status: "open" },
-// ];
-
-
-// function IncreaseCounter() {
-//   const [count, setCount] = useState<number>(0);
-
-//   return (
-//     <button onClick={() => setCount((count) => count + 1)}>
-//       Count: {count}
-//     </button>
-//   );
-// }
 
 function App() {
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -119,9 +103,7 @@ function App() {
       <div>
         <IssueFilter filter = {filter} onFilterChange={setFilter}/>
       </div>
-      {/* {filteredIssues.length === 0 && (
-        <p>No issues found.</p>
-      )} */}
+      
       {loading && <p>Loading issues...</p>}
       {error && <p>Error: {error} </p>}
       {!loading && !error && filteredIssues.length === 0 && (
@@ -136,7 +118,6 @@ function App() {
       
       {resolveError && <p role="alert">{resolveError}</p>}
 
-      {/* <IncreaseCounter /> */}
       <IssueForm
         title={newTitle}
         onTitleChange={setNewTitle}

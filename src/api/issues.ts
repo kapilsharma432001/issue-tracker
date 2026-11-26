@@ -38,7 +38,7 @@ export async function resolveIssueById(id: number): Promise<Issue> {
     })
 
     if(!response.ok){
-        throw new Error("Faile to resolve issue");
+        throw new Error("Failed to resolve issue");
     }
 
     return response.json()
