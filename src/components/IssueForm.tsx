@@ -1,4 +1,4 @@
-import type { FormEvent } from "react";
+import { useRef, type FormEvent } from "react";
 
 
 interface IssueFormProps {
@@ -17,6 +17,7 @@ function IssueForm({
     saving,
     error
 }: IssueFormProps) {
+    const inputRef = useRef<HTMLInputElement>(null);
     return (
         <form onSubmit = {onSubmit} >
             <label htmlFor="issue-title">Issue Title: </label>
@@ -28,8 +29,10 @@ function IssueForm({
                 placeholder="Enter issue title"
                 required
                 disabled={saving}
+                ref = {inputRef}
                 />
             <button type="submit" disabled={saving}>{saving ? "Adding..." : "Add Issue"}</button>
+            <button type="button" onClick={() => inputRef.current?.focus()}>Focus Title</button>
             {error && <p role = "alert">{error}</p>}
         </form>
     )
